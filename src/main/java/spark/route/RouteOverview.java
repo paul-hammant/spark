@@ -29,31 +29,8 @@ import spark.utils.Wrapper;
 import sun.reflect.ConstantPool;
 
 import static java.util.Collections.singletonList;
-import static spark.Spark.get;
 
 public class RouteOverview {
-
-    /**
-     * Enables a route overview (showing all the mapped routes)
-     * The overview is made available at "/debug/routeoverview/"
-     * Calling this method before any other route mapping
-     * bas been performed will initialize the Spark server
-     */
-    public static void enableRouteOverview() {
-        enableRouteOverview("/debug/routeoverview/");
-    }
-
-    /**
-     * Enables a route overview (showing all the mapped routes)
-     * The overview is made available at the provided path
-     *
-     * @param path the path to the route overview
-     *             Calling this method before any other route mapping
-     *             bas been performed will initialize the Spark server
-     */
-    public static void enableRouteOverview(String path) {
-        get(path, RouteOverview::createHtmlOverview);
-    }
 
     // Everything below this point is either package private or private
 
@@ -68,7 +45,7 @@ public class RouteOverview {
         routes.add(entry);
     }
 
-    static String createHtmlOverview(Request request, Response response) {
+    public static String createHtmlOverview(Request request, Response response) {
         String head = "<meta name='viewport' content='width=device-width, initial-scale=1'>"
                 + "<style>b,thead{font-weight:700}body{font-family:monospace;padding:15px}table{border-collapse:collapse;font-size:14px;border:1px solid #d5d5d5;width:100%;white-space:pre}thead{background:#e9e9e9;border-bottom:1px solid #d5d5d5}tbody tr:hover{background:#f5f5f5}td{padding:6px 15px}b{color:#33D}em{color:#666}</style>";
 

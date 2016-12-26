@@ -17,6 +17,7 @@
 package spark;
 
 import spark.route.HttpMethod;
+import spark.route.RouteOverview;
 import spark.utils.SparkUtils;
 
 /**
@@ -768,5 +769,28 @@ abstract class Routable {
                       ResponseTransformer transformer) {
         addRoute(HttpMethod.patch.name(), ResponseTransformerRouteImpl.create(path, acceptType, route, transformer));
     }
+
+    /**
+     * Enables a route overview (showing all the mapped routes)
+     * The overview is made available at "/debug/routeoverview/"
+     * Calling this method before any other route mapping
+     * bas been performed will initialize the Spark server
+     */
+    public void enableRouteOverview() {
+        enableRouteOverview("/debug/routeoverview/");
+    }
+
+    /**
+     * Enables a route overview (showing all the mapped routes)
+     * The overview is made available at the provided path
+     *
+     * @param path the path to the route overview
+     *             Calling this method before any other route mapping
+     *             bas been performed will initialize the Spark server
+     */
+    public void enableRouteOverview(String path) {
+        get(path, RouteOverview::createHtmlOverview);
+    }
+
 
 }

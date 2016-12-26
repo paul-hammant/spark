@@ -50,7 +50,7 @@ import static spark.globalstate.ServletFlag.isRunningFromServlet;
  * ...
  * http.get("/hello", (q, a) {@literal ->} "Hello World");
  */
-public final class Service extends Routable {
+public class Service extends Routable {
     private static final Logger LOG = LoggerFactory.getLogger("spark.Spark");
 
     public static final int SPARK_DEFAULT_PORT = 4567;
@@ -99,7 +99,7 @@ public final class Service extends Routable {
         return new Service();
     }
 
-    private Service() {
+    public Service() {
         redirect = Redirect.create(this);
         staticFiles = new StaticFiles();
 
@@ -429,7 +429,7 @@ public final class Service extends Routable {
         routes.add(httpMethod + " '" + getPaths() + filter.getPath() + "'", filter.getAcceptType(), filter);
     }
 
-    public synchronized void init() {
+    public synchronized Service init() {
         if (!initialized) {
 
             initializeRouteMatcher();
@@ -461,6 +461,7 @@ public final class Service extends Routable {
             }
             initialized = true;
         }
+        return this;
     }
 
     private void initializeRouteMatcher() {
