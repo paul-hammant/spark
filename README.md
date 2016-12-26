@@ -1,3 +1,9 @@
+Experimental Fork of SparkJava to make it non-static
+
+ - Paul Hammant, Dec 2016
+ 
+
+
 ![](https://img.shields.io/travis/perwendel/spark.svg) 
 ![](https://img.shields.io/github/license/perwendel/spark.svg)
 ![](https://img.shields.io/maven-central/v/com.sparkjava/spark-core.svg)
