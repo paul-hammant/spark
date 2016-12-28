@@ -30,14 +30,13 @@ import sun.reflect.ConstantPool;
 
 import static java.util.Collections.singletonList;
 
-// TODO - this is still static - fix it
 public class RouteOverview {
 
     // Everything below this point is either package private or private
 
-    static List<RouteEntry> routes = new ArrayList<>();
+    List<RouteEntry> routes = new ArrayList<>();
 
-    static void add(RouteEntry entry, Object wrapped) {
+    void add(RouteEntry entry, Object wrapped) {
 
         if (wrapped instanceof Wrapper) {
             entry.target = ((Wrapper) wrapped).delegate();
@@ -46,7 +45,7 @@ public class RouteOverview {
         routes.add(entry);
     }
 
-    public static String createHtmlOverview(Request request, Response response) {
+    public String createHtmlOverview(Request request, Response response) {
         String head = "<meta name='viewport' content='width=device-width, initial-scale=1'>"
                 + "<style>b,thead{font-weight:700}body{font-family:monospace;padding:15px}table{border-collapse:collapse;font-size:14px;border:1px solid #d5d5d5;width:100%;white-space:pre}thead{background:#e9e9e9;border-bottom:1px solid #d5d5d5}tbody tr:hover{background:#f5f5f5}td{padding:6px 15px}b{color:#33D}em{color:#666}</style>";
 
@@ -61,7 +60,7 @@ public class RouteOverview {
         return head + "<body><h1>All mapped routes</h1><table>" + String.join("", tableContent) + "</table><body>";
     }
 
-    static String createHtmlForRouteTarget(Object routeTarget) {
+    String createHtmlForRouteTarget(Object routeTarget) {
         String routeStr = routeTarget.toString();
 
         if (routeStr.contains("$$Lambda$")) { // This is a Route or Filter lambda
@@ -90,7 +89,7 @@ public class RouteOverview {
         return "<b>Mysterious route handler</b>";
     }
 
-    private static Map<Object, String> fieldNames(Object routeTarget) {
+    private Map<Object, String> fieldNames(Object routeTarget) {
         Map<Object, String> fieldNames = new HashMap<>();
 
         try {
@@ -107,15 +106,15 @@ public class RouteOverview {
         return fieldNames;
     }
 
-    private static String className(Object routeTarget) {
+    private String className(Object routeTarget) {
         return methodRefInfo(routeTarget)[0].replace("/", ".");
     }
 
-    private static String methodName(Object routeTarget) {
+    private String methodName(Object routeTarget) {
         return methodRefInfo(routeTarget)[1];
     }
 
-    private static String[] methodRefInfo(Object routeTarget) {
+    private String[] methodRefInfo(Object routeTarget) {
         try {
             // This is some robustified shit right here.
             Method getConstantPool = Class.class.getDeclaredMethod("getConstantPool");

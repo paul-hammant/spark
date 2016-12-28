@@ -25,6 +25,12 @@ import spark.utils.SparkUtils;
  */
 abstract class Routable {
 
+    public final RouteOverview routeOverview;
+
+    public Routable(RouteOverview routeOverview) {
+        this.routeOverview = routeOverview;
+    }
+
     /**
      * Adds a route
      *
@@ -818,7 +824,7 @@ abstract class Routable {
      *             bas been performed will initialize the Spark server
      */
     public void enableRouteOverview(String path) {
-        get(path, RouteOverview::createHtmlOverview);
+        get(path, routeOverview::createHtmlOverview);
     }
 
 

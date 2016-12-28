@@ -29,9 +29,9 @@ public final class ServletRoutes {
     private ServletRoutes() {
     }
 
-    public static synchronized Routes get() {
+    public static synchronized Routes get(RouteOverview routeOverview) {
         if (routes == null) {
-            routes = new Routes();
+            routes = new Routes(routeOverview);
         }
         return routes;
     }

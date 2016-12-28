@@ -26,7 +26,7 @@ public class RoutesTest {
         List<RouteEntry> expectedRoutes = new ArrayList<>();
         expectedRoutes.add(expectedRouteEntry);
 
-        Routes simpleRouteMatcher = Routes.create();
+        Routes simpleRouteMatcher = Routes.create(null);
         simpleRouteMatcher.add(route, acceptType, target);
 
         //then
@@ -43,7 +43,7 @@ public class RoutesTest {
         String acceptType = "*/*";
         Object target = new Object();
 
-        Routes simpleRouteMatcher = Routes.create();
+        Routes simpleRouteMatcher = Routes.create(null);
         simpleRouteMatcher.add(route, acceptType, target);
 
         //then

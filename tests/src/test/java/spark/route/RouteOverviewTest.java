@@ -13,8 +13,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.StringContains.containsString;
 import static org.junit.Assert.assertEquals;
-import static spark.route.RouteOverview.createHtmlForRouteTarget;
-import static spark.route.RouteOverview.routes;
 
 public class RouteOverviewTest {
 
@@ -22,7 +20,7 @@ public class RouteOverviewTest {
 
     @Before
     public void setup() {
-        routes = new ArrayList<>();
+
     }
 
     @After
@@ -34,13 +32,21 @@ public class RouteOverviewTest {
 
     @Test
     public void assertThat_noRoutesAreAddedByDefault() {
-        assertThat(routes.size(), is(0));
+        svc = new Service() {{
+            port(0);
+        }};
+
+        assertThat(svc.routeOverview.routes.size(), is(0));
     }
 
     @Test
     public void assertThat_unmappedRoute_doesNotWork() {
+        svc = new Service() {{
+            port(0);
+        }};
+
         Route unmappedRoute = (Request request, Response response) -> "";
-        assertThat(createHtmlForRouteTarget(unmappedRoute), not(containsString("unmappedRoute")));
+        assertThat(svc.routeOverview.createHtmlForRouteTarget(unmappedRoute), not(containsString("unmappedRoute")));
     }
 
     @Test
@@ -50,8 +56,8 @@ public class RouteOverviewTest {
             port(0);
             before("/0", RouteOverviewTest.filterField);
         }};
-        assertThat(routes.size(), is(1));
-        assertEquals("[before, /0, <RouteOverviewTest.filterField>]", Arrays.deepToString(routes.toArray()));
+        assertThat(svc.routeOverview.routes.size(), is(1));
+        assertEquals("[before, /0, <RouteOverviewTest.filterField>]", Arrays.deepToString(svc.routeOverview.routes.toArray()));
     }
 
     @Test
@@ -61,8 +67,8 @@ public class RouteOverviewTest {
             port(0);
             before("/1", new FilterImplementer());
         }};
-        assertThat(routes.size(), is(1));
-        assertEquals("[before, /1, <RouteOverviewTest.FilterImplementer>]", Arrays.deepToString(routes.toArray()));
+        assertThat(svc.routeOverview.routes.size(), is(1));
+        assertEquals("[before, /1, <RouteOverviewTest.FilterImplementer>]", Arrays.deepToString(svc.routeOverview.routes.toArray()));
     }
 
     @Test
@@ -72,8 +78,8 @@ public class RouteOverviewTest {
             port(0);
             FilterMethodRefClass.before(this);
         }};
-        assertThat(routes.size(), is(1));
-        assertThat(Arrays.deepToString(routes.toArray()), startsWith("[before, /2, spark.route.RouteOverviewTest$FilterMethodRefClass$$Lambda$"));
+        assertThat(svc.routeOverview.routes.size(), is(1));
+        assertThat(Arrays.deepToString(svc.routeOverview.routes.toArray()), startsWith("[before, /2, spark.route.RouteOverviewTest$FilterMethodRefClass$$Lambda$"));
 
     }
 
@@ -85,8 +91,8 @@ public class RouteOverviewTest {
             FilterLambdaRefClass.before(this);
 
         }};
-        assertThat(routes.size(), is(1));
-        assertThat(Arrays.deepToString(routes.toArray()), startsWith("[before, 3, spark.route.RouteOverviewTest$FilterLambdaRefClass$$Lambda$"));
+        assertThat(svc.routeOverview.routes.size(), is(1));
+        assertThat(Arrays.deepToString(svc.routeOverview.routes.toArray()), startsWith("[before, 3, spark.route.RouteOverviewTest$FilterLambdaRefClass$$Lambda$"));
     }
 
     @Test
@@ -97,8 +103,8 @@ public class RouteOverviewTest {
             get("/4", RouteOverviewTest.routeField);
             awaitInitialization();
         }};
-        assertThat(routes.size(), is(1));
-        assertEquals("[get, /4, <RouteOverviewTest.routeField>]", Arrays.deepToString(routes.toArray()));
+        assertThat(svc.routeOverview.routes.size(), is(1));
+        assertEquals("[get, /4, <RouteOverviewTest.routeField>]", Arrays.deepToString(svc.routeOverview.routes.toArray()));
 
     }
 
@@ -108,8 +114,8 @@ public class RouteOverviewTest {
             port(0);
             get("/5", new RouteImplementer());
         }};
-        assertThat(routes.size(), is(1));
-        assertEquals("[get, /5, <RouteOverviewTest.RouteImplementer>]", Arrays.deepToString(routes.toArray()));
+        assertThat(svc.routeOverview.routes.size(), is(1));
+        assertEquals("[get, /5, <RouteOverviewTest.RouteImplementer>]", Arrays.deepToString(svc.routeOverview.routes.toArray()));
     }
 
     @Test
@@ -119,8 +125,8 @@ public class RouteOverviewTest {
             RouteMethodRefClass.get(this);
             awaitInitialization();
         }};
-        assertThat(routes.size(), is(1));
-        assertThat(Arrays.deepToString(routes.toArray()), startsWith("[get, /6, spark.route.RouteOverviewTest$RouteMethodRefClass$$Lambda$"));
+        assertThat(svc.routeOverview.routes.size(), is(1));
+        assertThat(Arrays.deepToString(svc.routeOverview.routes.toArray()), startsWith("[get, /6, spark.route.RouteOverviewTest$RouteMethodRefClass$$Lambda$"));
     }
 
     @Test
@@ -131,8 +137,8 @@ public class RouteOverviewTest {
             get("/7", ((request, response) -> ""));
             awaitInitialization();
         }};
-        assertThat(routes.size(), is(1));
-        assertThat(Arrays.deepToString(routes.toArray()), startsWith("[get, /7, spark.route.RouteOverviewTest$8$$Lambda$"));
+        assertThat(svc.routeOverview.routes.size(), is(1));
+        assertThat(Arrays.deepToString(svc.routeOverview.routes.toArray()), startsWith("[get, /7, spark.route.RouteOverviewTest$10$$Lambda$"));
 
     }
 

@@ -71,7 +71,8 @@ public class SparkFilter implements Filter {
 
         filterPath = FilterTools.getFilterPath(filterConfig);
 
-        matcherFilter = new MatcherFilter(ServletRoutes.get(), StaticFilesConfiguration.servletInstance, true, false);
+        // TODO not null
+        matcherFilter = new MatcherFilter(ServletRoutes.get(null), StaticFilesConfiguration.servletInstance, true, false);
     }
 
     /**

@@ -32,6 +32,7 @@ import spark.embeddedserver.EmbeddedServers;
 import spark.embeddedserver.jetty.websocket.WebSocketHandlerClassWrapper;
 import spark.embeddedserver.jetty.websocket.WebSocketHandlerInstanceWrapper;
 import spark.embeddedserver.jetty.websocket.WebSocketHandlerWrapper;
+import spark.route.RouteOverview;
 import spark.route.Routes;
 import spark.route.ServletRoutes;
 import spark.ssl.SslStores;
@@ -100,6 +101,7 @@ public class Service extends Routable {
     }
 
     public Service() {
+        super(new RouteOverview());
         redirect = Redirect.create(this);
         staticFiles = new StaticFiles();
 
@@ -467,9 +469,9 @@ public class Service extends Routable {
 
     private void initializeRouteMatcher() {
         if (isRunningFromServlet()) {
-            routes = ServletRoutes.get();
+            routes = ServletRoutes.get(routeOverview);
         } else {
-            routes = Routes.create();
+            routes = Routes.create(routeOverview);
         }
     }
 

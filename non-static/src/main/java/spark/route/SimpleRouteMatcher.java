@@ -27,6 +27,11 @@ import spark.routematch.RouteMatch;
  */
 public class SimpleRouteMatcher extends Routes {
 
+    public SimpleRouteMatcher() {
+        // TODO not null
+        super(null);
+    }
+
     /**
      * @param route      the route
      * @param acceptType the accept type
