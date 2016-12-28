@@ -71,9 +71,9 @@ public class SparkFilter implements Filter {
 
         filterPath = FilterTools.getFilterPath(filterConfig);
 
-        // TODO not null x 3
+        // TODO not null x 4
         matcherFilter = new MatcherFilter(ServletRoutes.get(null), StaticFilesConfiguration.servletInstance,
-                true, false, null, null);
+                true, false, null, null, null);
     }
 
     /**
@@ -166,7 +166,8 @@ public class SparkFilter implements Filter {
         };
 
         // handle static resources
-        boolean consumed = StaticFilesConfiguration.servletInstance.consume(httpRequest, httpResponse);
+        // TODO not null
+        boolean consumed = StaticFilesConfiguration.servletInstance.consume(httpRequest, httpResponse, null);
 
         if (consumed) {
             return;

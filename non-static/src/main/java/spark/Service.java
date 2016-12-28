@@ -91,6 +91,7 @@ public class Service extends Routable {
     protected final CustomErrorPages customErrorPages;
     protected final ExceptionMapper exceptionMapper;
     private final EmbeddedServers embeddedServers;
+    protected final MimeType mimeTypes;
 
     private final StaticFilesConfiguration staticFilesConfiguration;
 
@@ -107,7 +108,8 @@ public class Service extends Routable {
     public Service() {
         super(new RouteOverview());
         redirect = Redirect.create(this);
-        staticFiles = new StaticFiles();
+        mimeTypes = new MimeType();
+        staticFiles = new StaticFiles(mimeTypes);
         customErrorPages = new CustomErrorPages();
         exceptionMapper = new ExceptionMapper();
         embeddedServers = new EmbeddedServers();
@@ -457,7 +459,8 @@ public class Service extends Routable {
                                                     staticFilesConfiguration,
                                                     hasMultipleHandlers(),
                                                     customErrorPages,
-                                                    exceptionMapper);
+                                                    exceptionMapper,
+                            mimeTypes);
 
                     server.configureWebSockets(webSocketHandlers, webSocketIdleTimeoutMillis);
 
@@ -574,6 +577,12 @@ public class Service extends Routable {
      */
     public final class StaticFiles {
 
+        private final MimeType mimeTypes;
+
+        public StaticFiles(MimeType mimeTypes) {
+            this.mimeTypes = mimeTypes;
+        }
+
         /**
          * Sets the folder in classpath serving static files. Observe: this method
          * must be called before all other methods.
@@ -632,14 +641,14 @@ public class Service extends Routable {
          * @param mimeType  the mime-type for the extension
          */
         public void registerMimeType(String extension, String mimeType) {
-            MimeType.register(extension, mimeType);
+            this.mimeTypes.register(extension, mimeType);
         }
 
         /**
          * Disables the automatic setting of Content-Type header made from a guess based on extension.
          */
         public void disableMimeTypeGuessing() {
-            MimeType.disableGuessing();
+            mimeTypes.disableGuessing();
         }
 
     }

@@ -60,13 +60,15 @@ public class StaticFilesConfiguration {
      *
      * @param httpRequest  The HTTP servlet request.
      * @param httpResponse The HTTP servlet response.
+     * @param mimeTypes
      * @return true if consumed, false otherwise.
      * @throws IOException in case of IO error.
      */
     public boolean consume(HttpServletRequest httpRequest,
-                           HttpServletResponse httpResponse) throws IOException {
+                           HttpServletResponse httpResponse,
+                           MimeType mimeTypes) throws IOException {
         try {
-            if (consumeWithFileResourceHandlers(httpRequest, httpResponse)) {
+            if (consumeWithFileResourceHandlers(httpRequest, httpResponse, mimeTypes)) {
                 return true;
             }
 
@@ -79,7 +81,7 @@ public class StaticFilesConfiguration {
 
 
     private boolean consumeWithFileResourceHandlers(HttpServletRequest httpRequest,
-                                                    HttpServletResponse httpResponse) throws IOException {
+                                                    HttpServletResponse httpResponse, MimeType mimeTypes) throws IOException {
         if (staticResourceHandlers != null) {
 
             for (AbstractResourceHandler staticResourceHandler : staticResourceHandlers) {
@@ -88,8 +90,8 @@ public class StaticFilesConfiguration {
 
                 if (resource != null && resource.isReadable()) {
 
-                    if (MimeType.shouldGuess()) {
-                        httpResponse.setHeader(MimeType.CONTENT_TYPE, MimeType.fromResource(resource));
+                    if (mimeTypes.shouldGuess()) {
+                        httpResponse.setHeader(MimeType.CONTENT_TYPE, mimeTypes.fromResource(resource));
                     }
                     customHeaders.forEach(httpResponse::setHeader); //add all user-defined headers to response
                     OutputStream wrappedOutputStream = GzipUtils.checkAndWrap(httpRequest, httpResponse, false);

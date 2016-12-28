@@ -30,7 +30,6 @@ import spark.Service;
 import spark.examples.exception.NotFoundException;
 import spark.util.SparkTestUtil;
 
-import static spark.staticfiles.MimeType.enableGuessing;
 import static spark.util.SparkTestUtil.sleep;
 
 
@@ -89,14 +88,10 @@ public class StaticFilesTest {
                 response.body(NOT_FOUND_BRO);
             });
 
-
             awaitInitialization();
 
         }};
 
-
-        //TODO this is still static - change it
-        enableGuessing();
 
     }
 

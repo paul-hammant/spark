@@ -31,6 +31,7 @@ import spark.*;
 import spark.embeddedserver.jetty.HttpRequestWrapper;
 import spark.route.HttpMethod;
 import spark.serialization.SerializerChain;
+import spark.staticfiles.MimeType;
 import spark.staticfiles.StaticFilesConfiguration;
 
 /**
@@ -54,6 +55,7 @@ public class MatcherFilter implements Filter {
     private boolean hasOtherHandlers;
     private final CustomErrorPages customErrorPages;
     private final ExceptionMapper exceptionMapper;
+    private final MimeType mimeTypes;
 
     /**
      * Constructor
@@ -69,7 +71,8 @@ public class MatcherFilter implements Filter {
                          boolean externalContainer,
                          boolean hasOtherHandlers,
                          CustomErrorPages customErrorPages,
-                         ExceptionMapper exceptionMapper) {
+                         ExceptionMapper exceptionMapper,
+                         MimeType mimeTypes) {
 
         this.routeMatcher = routeMatcher;
         this.staticFiles = staticFiles;
@@ -77,6 +80,7 @@ public class MatcherFilter implements Filter {
         this.hasOtherHandlers = hasOtherHandlers;
         this.customErrorPages = customErrorPages;
         this.exceptionMapper = exceptionMapper;
+        this.mimeTypes = mimeTypes;
         this.serializerChain = new SerializerChain();
     }
 
@@ -93,7 +97,7 @@ public class MatcherFilter implements Filter {
         HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
 
         // handle static resources
-        boolean consumedByStaticFile = staticFiles.consume(httpRequest, httpResponse);
+        boolean consumedByStaticFile = staticFiles.consume(httpRequest, httpResponse, mimeTypes);
 
         if (consumedByStaticFile) {
             return;

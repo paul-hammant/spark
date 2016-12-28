@@ -19,6 +19,7 @@ package spark.embeddedserver;
 import spark.CustomErrorPages;
 import spark.ExceptionMapper;
 import spark.route.Routes;
+import spark.staticfiles.MimeType;
 import spark.staticfiles.StaticFilesConfiguration;
 
 /**
@@ -34,7 +35,8 @@ public interface EmbeddedServerFactory {
      * @param hasMultipleHandler true if other handlers exist
      * @param customErrorPages
      * @param exceptionMapper
+     * @param mimeTypes
      * @return the created instance
      */
-    public EmbeddedServer create(Routes routeMatcher, StaticFilesConfiguration staticFilesConfiguration, boolean hasMultipleHandler, CustomErrorPages customErrorPages, ExceptionMapper exceptionMapper);
+    public EmbeddedServer create(Routes routeMatcher, StaticFilesConfiguration staticFilesConfiguration, boolean hasMultipleHandler, CustomErrorPages customErrorPages, ExceptionMapper exceptionMapper, MimeType mimeTypes);
 }

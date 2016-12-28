@@ -23,6 +23,7 @@ import spark.CustomErrorPages;
 import spark.ExceptionMapper;
 import spark.embeddedserver.jetty.EmbeddedJettyFactory;
 import spark.route.Routes;
+import spark.staticfiles.MimeType;
 import spark.staticfiles.StaticFilesConfiguration;
 
 /**
@@ -61,12 +62,13 @@ public class EmbeddedServers {
                                         StaticFilesConfiguration staticFilesConfiguration,
                                         boolean multipleHandlers,
                                         CustomErrorPages customErrorPages,
-                                        ExceptionMapper exceptionMapper) {
+                                        ExceptionMapper exceptionMapper,
+                                        MimeType mimeTypes) {
 
         EmbeddedServerFactory factory = factories.get(identifier);
 
         if (factory != null) {
-            return factory.create(routeMatcher, staticFilesConfiguration, multipleHandlers, customErrorPages, exceptionMapper);
+            return factory.create(routeMatcher, staticFilesConfiguration, multipleHandlers, customErrorPages, exceptionMapper, mimeTypes);
         } else {
             throw new RuntimeException("No embedded server matching the identifier");
         }

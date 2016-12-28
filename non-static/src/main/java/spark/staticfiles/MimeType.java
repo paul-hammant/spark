@@ -29,9 +29,9 @@ public class MimeType {
 
     final static String CONTENT_TYPE = "Content-Type";
 
-    private static volatile boolean guessingOn = true;
+    private volatile boolean guessingOn = true;
 
-    private static Map<String, String> mappings = new HashMap<String, String>() {{
+    private Map<String, String> mappings = new HashMap<String, String>() {{
         put("au", "audio/basic");
         put("avi", "video/msvideo,video/avi,video/x-msvideo");
         put("bmp", "image/bmp");
@@ -94,34 +94,30 @@ public class MimeType {
     }};
 
 
-    public static void register(String extension, String mimeType) {
+    public void register(String extension, String mimeType) {
         mappings.put(extension, mimeType);
     }
 
     //TODO this whole class is still static - change it
-    public static void disableGuessing() {
+    public void disableGuessing() {
         guessingOn = false;
     }
 
-    public static void enableGuessing() {
-        guessingOn = true;
-    }
-
-    public static String fromResource(AbstractFileResolvingResource resource) {
+    public String fromResource(AbstractFileResolvingResource resource) {
         String filename = Optional.ofNullable(resource.getFilename()).orElse("");
         return getMimeType(filename);
     }
 
-    protected static String getMimeType(String filename) {
+    protected String getMimeType(String filename) {
         String fileExtension = filename.replaceAll("^.*\\.(.*)$", "$1");
         return mappings.getOrDefault(fileExtension, "application/octet-stream");
     }
 
-    protected static String fromPathInfo(String pathInfo) {
+    protected String fromPathInfo(String pathInfo) {
         return getMimeType(pathInfo);
     }
 
-    protected static boolean shouldGuess() {
+    protected boolean shouldGuess() {
         return guessingOn;
     }
 }
