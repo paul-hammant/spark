@@ -90,6 +90,7 @@ public class Service extends Routable {
 
     protected final CustomErrorPages customErrorPages;
     protected final ExceptionMapper exceptionMapper;
+    private final EmbeddedServers embeddedServers;
 
     private final StaticFilesConfiguration staticFilesConfiguration;
 
@@ -109,6 +110,7 @@ public class Service extends Routable {
         staticFiles = new StaticFiles();
         customErrorPages = new CustomErrorPages();
         exceptionMapper = new ExceptionMapper();
+        embeddedServers = new EmbeddedServers();
 
         if (isRunningFromServlet()) {
             staticFilesConfiguration = StaticFilesConfiguration.servletInstance;
@@ -444,13 +446,13 @@ public class Service extends Routable {
 
             if (!isRunningFromServlet()) {
                 new Thread(() -> {
-                    EmbeddedServers.initialize();
+                    embeddedServers.initialize();
 
                     if (embeddedServerIdentifier == null) {
                         embeddedServerIdentifier = EmbeddedServers.defaultIdentifier();
                     }
 
-                    server = EmbeddedServers.create(embeddedServerIdentifier,
+                    server = embeddedServers.create(embeddedServerIdentifier,
                                                     routes,
                                                     staticFilesConfiguration,
                                                     hasMultipleHandlers(),

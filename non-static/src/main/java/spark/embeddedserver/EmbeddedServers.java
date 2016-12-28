@@ -35,9 +35,9 @@ public class EmbeddedServers {
         JETTY
     }
 
-    private static Map<Object, EmbeddedServerFactory> factories = new HashMap<>();
+    private Map<Object, EmbeddedServerFactory> factories = new HashMap<>();
 
-    public static void initialize() {
+    public void initialize() {
         add(Identifiers.JETTY, new EmbeddedJettyFactory());
     }
 
@@ -56,7 +56,7 @@ public class EmbeddedServers {
      * @param exceptionMapper
      * @return the created EmbeddedServer object
      */
-    public static EmbeddedServer create(Object identifier,
+    public EmbeddedServer create(Object identifier,
                                         Routes routeMatcher,
                                         StaticFilesConfiguration staticFilesConfiguration,
                                         boolean multipleHandlers,
@@ -78,7 +78,7 @@ public class EmbeddedServers {
      * @param identifier the identifier
      * @param factory    the factory
      */
-    public static void add(Object identifier, EmbeddedServerFactory factory) {
+    public void add(Object identifier, EmbeddedServerFactory factory) {
         factories.put(identifier, factory);
     }
 
