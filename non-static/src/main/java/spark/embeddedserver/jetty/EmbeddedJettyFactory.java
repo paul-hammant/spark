@@ -16,6 +16,7 @@
  */
 package spark.embeddedserver.jetty;
 
+import spark.CustomErrorPages;
 import spark.embeddedserver.EmbeddedServer;
 import spark.embeddedserver.EmbeddedServerFactory;
 import spark.http.matching.MatcherFilter;
@@ -27,8 +28,9 @@ import spark.staticfiles.StaticFilesConfiguration;
  */
 public class EmbeddedJettyFactory implements EmbeddedServerFactory {
 
-    public EmbeddedServer create(Routes routeMatcher, StaticFilesConfiguration staticFilesConfiguration, boolean hasMultipleHandler) {
-        MatcherFilter matcherFilter = new MatcherFilter(routeMatcher, staticFilesConfiguration, false, hasMultipleHandler);
+    public EmbeddedServer create(Routes routeMatcher, StaticFilesConfiguration staticFilesConfiguration, boolean hasMultipleHandler, CustomErrorPages customErrorPages) {
+        MatcherFilter matcherFilter = new MatcherFilter(routeMatcher, staticFilesConfiguration, false,
+                hasMultipleHandler, customErrorPages);
         matcherFilter.init(null);
 
         JettyHandler handler = new JettyHandler(matcherFilter);

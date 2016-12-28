@@ -88,6 +88,8 @@ public class Service extends Routable {
     public final Redirect redirect;
     public final StaticFiles staticFiles;
 
+    protected final CustomErrorPages customErrorPages;
+
     private final StaticFilesConfiguration staticFilesConfiguration;
 
     /**
@@ -104,6 +106,7 @@ public class Service extends Routable {
         super(new RouteOverview());
         redirect = Redirect.create(this);
         staticFiles = new StaticFiles();
+        customErrorPages = new CustomErrorPages();
 
         if (isRunningFromServlet()) {
             staticFilesConfiguration = StaticFilesConfiguration.servletInstance;
@@ -330,7 +333,7 @@ public class Service extends Routable {
      * @param page the custom 404 error page.
      */
     public synchronized void notFound(String page) {
-        CustomErrorPages.add(404, page);
+        customErrorPages.add(404, page);
     }
 
     /**
@@ -339,21 +342,21 @@ public class Service extends Routable {
      * @param page the custom 500 internal server error page.
      */
     public synchronized void internalServerError(String page) {
-        CustomErrorPages.add(500, page);
+        customErrorPages.add(500, page);
     }
 
     /**
      * Maps 404 errors to the provided route.
      */
     public synchronized void notFound(Route route) {
-        CustomErrorPages.add(404, route);
+        customErrorPages.add(404, route);
     }
 
     /**
      * Maps 500 internal server errors to the provided route.
      */
     public synchronized void internalServerError(Route route) {
-        CustomErrorPages.add(500, route);
+        customErrorPages.add(500, route);
     }
 
     /**
@@ -448,7 +451,7 @@ public class Service extends Routable {
                     server = EmbeddedServers.create(embeddedServerIdentifier,
                                                     routes,
                                                     staticFilesConfiguration,
-                                                    hasMultipleHandlers());
+                                                    hasMultipleHandlers(), customErrorPages);
 
                     server.configureWebSockets(webSocketHandlers, webSocketIdleTimeoutMillis);
 

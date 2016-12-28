@@ -16,6 +16,7 @@
  */
 package spark.embeddedserver;
 
+import spark.CustomErrorPages;
 import spark.route.Routes;
 import spark.staticfiles.StaticFilesConfiguration;
 
@@ -30,7 +31,8 @@ public interface EmbeddedServerFactory {
      * @param routeMatcher The route matcher
      * @param staticFilesConfiguration The static files configuration object
      * @param hasMultipleHandler true if other handlers exist
+     * @param customErrorPages
      * @return the created instance
      */
-    public EmbeddedServer create(Routes routeMatcher, StaticFilesConfiguration staticFilesConfiguration, boolean hasMultipleHandler);
+    public EmbeddedServer create(Routes routeMatcher, StaticFilesConfiguration staticFilesConfiguration, boolean hasMultipleHandler, CustomErrorPages customErrorPages);
 }

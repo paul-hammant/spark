@@ -55,6 +55,7 @@ public class MatcherFilter implements Filter {
 
     private boolean externalContainer;
     private boolean hasOtherHandlers;
+    private final CustomErrorPages customErrorPages;
 
     /**
      * Constructor
@@ -68,12 +69,14 @@ public class MatcherFilter implements Filter {
     public MatcherFilter(spark.route.Routes routeMatcher,
                          StaticFilesConfiguration staticFiles,
                          boolean externalContainer,
-                         boolean hasOtherHandlers) {
+                         boolean hasOtherHandlers,
+                         CustomErrorPages customErrorPages) {
 
         this.routeMatcher = routeMatcher;
         this.staticFiles = staticFiles;
         this.externalContainer = externalContainer;
         this.hasOtherHandlers = hasOtherHandlers;
+        this.customErrorPages = customErrorPages;
         this.serializerChain = new SerializerChain();
     }
 
@@ -140,7 +143,8 @@ public class MatcherFilter implements Filter {
                     body,
                     requestWrapper,
                     responseWrapper,
-                    generalException);
+                    generalException,
+                    customErrorPages);
 
         }
 
@@ -161,10 +165,10 @@ public class MatcherFilter implements Filter {
                      uri, ACCEPT_TYPE_REQUEST_MIME_HEADER, acceptType);
             httpResponse.setStatus(HttpServletResponse.SC_NOT_FOUND);
 
-            if (CustomErrorPages.existsFor(404)) {
+            if (customErrorPages.existsFor(404)) {
                 requestWrapper.setDelegate(RequestResponseFactory.create(httpRequest));
                 responseWrapper.setDelegate(RequestResponseFactory.create(httpResponse));
-                body.set(CustomErrorPages.getFor(404, requestWrapper, responseWrapper));
+                body.set(customErrorPages.getFor(404, requestWrapper, responseWrapper));
             } else {
                 body.set(String.format(CustomErrorPages.NOT_FOUND));
             }

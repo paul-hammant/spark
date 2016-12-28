@@ -26,16 +26,15 @@ public class CustomErrorPages {
     public static final String NOT_FOUND = "<html><body><h2>404 Not found</h2></body></html>";
     public static final String INTERNAL_ERROR = "<html><body><h2>500 Internal Error</h2></body></html>";
 
-    public static boolean existsFor(int status) {
-        return CustomErrorPages.getInstance().customPages.containsKey(status);
+    public boolean existsFor(int status) {
+        return customPages.containsKey(status);
     }
 
-    public static Object getFor(int status, Request request, Response response) {
+    public Object getFor(int status, Request request, Response response) {
 
-        Object customRenderer = CustomErrorPages.getInstance().customPages.get(status);
-        Object customPage;
+        Object customRenderer = customPages.get(status);
 
-        customPage = status == 404 ? NOT_FOUND : INTERNAL_ERROR;
+        Object customPage = status == 404 ? NOT_FOUND : INTERNAL_ERROR;
 
         if (customRenderer instanceof String) {
             customPage = customRenderer;
@@ -46,32 +45,24 @@ public class CustomErrorPages {
                 // customPage is already set to default error so nothing needed here
             }
         }
-
         return customPage;
     }
 
-    static void add(int status, String page) {
-        CustomErrorPages.getInstance().customPages.put(status, page);
+    void add(int status, String page) {
+        customPages.put(status, page);
     }
 
-    static void add(int status, Route route) {
-        CustomErrorPages.getInstance().customPages.put(status, route);
+    void add(int status, Route route) {
+        customPages.put(status, route);
     }
 
     // Private stuff
 
     private final HashMap<Integer, Object> customPages;
 
-    private CustomErrorPages() {
+    CustomErrorPages() {
         customPages = new HashMap<>();
     }
 
-    private static class SingletonHolder {
-        private static final CustomErrorPages INSTANCE = new CustomErrorPages();
-    }
-
-    private static CustomErrorPages getInstance() {
-        return SingletonHolder.INSTANCE;
-    }
 
 }
