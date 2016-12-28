@@ -119,8 +119,8 @@ public class StaticFilesTestExternal {
         String path = "/" + URLEncoder.encode("..\\..\\spark\\") + "Spark.class";
         SparkTestUtil.UrlResponse response = doGet(path);
 
-        Assert.assertEquals(404, response.status);
-        Assert.assertEquals(NOT_FOUND_BRO, response.body);
+        Assert.assertEquals(400, response.status);
+        Assert.assertEquals("<h1>Bad Message 400</h1><pre>reason: Bad URI</pre>", response.body);
 
         testGet();
     }

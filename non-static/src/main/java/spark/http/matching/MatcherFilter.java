@@ -53,7 +53,7 @@ public class MatcherFilter implements Filter {
     private boolean externalContainer;
     private boolean hasOtherHandlers;
     private final CustomErrorPages customErrorPages;
-    private ExceptionMapper exceptionMapper;
+    private final ExceptionMapper exceptionMapper;
 
     /**
      * Constructor
