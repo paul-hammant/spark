@@ -34,13 +34,11 @@ import spark.embeddedserver.jetty.websocket.WebSocketHandlerInstanceWrapper;
 import spark.embeddedserver.jetty.websocket.WebSocketHandlerWrapper;
 import spark.route.RouteOverview;
 import spark.route.Routes;
-import spark.route.ServletRoutes;
 import spark.ssl.SslStores;
 import spark.staticfiles.MimeType;
 import spark.staticfiles.StaticFilesConfiguration;
 
 import static java.util.Objects.requireNonNull;
-import static spark.globalstate.ServletFlag.isRunningFromServlet;
 
 /**
  * Represents a Spark server "session".
@@ -114,11 +112,7 @@ public class Service extends Routable {
         exceptionMapper = new ExceptionMapper();
         embeddedServers = new EmbeddedServers();
 
-        if (isRunningFromServlet()) {
-            staticFilesConfiguration = StaticFilesConfiguration.servletInstance;
-        } else {
-            staticFilesConfiguration = StaticFilesConfiguration.create();
-        }
+        staticFilesConfiguration = StaticFilesConfiguration.create();
     }
 
     /**
@@ -239,7 +233,7 @@ public class Service extends Routable {
      * @return the object with folder set
      */
     public synchronized Service staticFileLocation(String folder) {
-        if (initialized && !isRunningFromServlet()) {
+        if (initialized) {
             throwBeforeRouteMappingException();
         }
 
@@ -262,7 +256,7 @@ public class Service extends Routable {
      * @return the object with external folder set
      */
     public synchronized Service externalStaticFileLocation(String externalFolder) {
-        if (initialized && !isRunningFromServlet()) {
+        if (initialized) {
             throwBeforeRouteMappingException();
         }
 
@@ -305,9 +299,6 @@ public class Service extends Routable {
         if (initialized) {
             throwBeforeRouteMappingException();
         }
-        if (isRunningFromServlet()) {
-            throw new IllegalStateException("WebSockets are only supported in the embedded server");
-        }
         requireNonNull(path, "WebSocket path cannot be null");
         if (webSocketHandlers == null) {
             webSocketHandlers = new HashMap<>();
@@ -325,9 +316,6 @@ public class Service extends Routable {
     public synchronized Service webSocketIdleTimeoutMillis(int timeoutMillis) {
         if (initialized) {
             throwBeforeRouteMappingException();
-        }
-        if (isRunningFromServlet()) {
-            throw new IllegalStateException("WebSockets are only supported in the embedded server");
         }
         webSocketIdleTimeoutMillis = Optional.of(timeoutMillis);
         return this;
@@ -446,45 +434,40 @@ public class Service extends Routable {
 
             initializeRouteMatcher();
 
-            if (!isRunningFromServlet()) {
-                new Thread(() -> {
-                    embeddedServers.initialize();
+            new Thread(() -> {
+                embeddedServers.initialize();
 
-                    if (embeddedServerIdentifier == null) {
-                        embeddedServerIdentifier = EmbeddedServers.defaultIdentifier();
-                    }
+                if (embeddedServerIdentifier == null) {
+                    embeddedServerIdentifier = EmbeddedServers.defaultIdentifier();
+                }
 
-                    server = embeddedServers.create(embeddedServerIdentifier,
-                                                    routes,
-                                                    staticFilesConfiguration,
-                                                    hasMultipleHandlers(),
-                                                    customErrorPages,
-                                                    exceptionMapper,
-                            mimeTypes);
+                server = embeddedServers.create(embeddedServerIdentifier,
+                        routes,
+                        staticFilesConfiguration,
+                        hasMultipleHandlers(),
+                        customErrorPages,
+                        exceptionMapper,
+                        mimeTypes);
 
-                    server.configureWebSockets(webSocketHandlers, webSocketIdleTimeoutMillis);
+                server.configureWebSockets(webSocketHandlers, webSocketIdleTimeoutMillis);
 
-                    port = server.ignite(
-                            ipAddress,
-                            port,
-                            sslStores,
-                            latch,
-                            maxThreads,
-                            minThreads,
-                            threadIdleTimeoutMillis);
-                }).start();
-            }
+                port = server.ignite(
+                        ipAddress,
+                        port,
+                        sslStores,
+                        latch,
+                        maxThreads,
+                        minThreads,
+                        threadIdleTimeoutMillis);
+            }).start();
+
             initialized = true;
         }
         return this;
     }
 
     private void initializeRouteMatcher() {
-        if (isRunningFromServlet()) {
-            routes = ServletRoutes.get(routeOverview);
-        } else {
             routes = Routes.create(routeOverview);
-        }
     }
 
     //////////////////////////////////////////////////

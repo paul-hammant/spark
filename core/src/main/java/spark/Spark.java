@@ -16,6 +16,8 @@
  */
 package spark;
 
+import spark.staticfiles.MimeType;
+
 import static spark.Service.ignite;
 
 /**
@@ -958,6 +960,33 @@ public class Spark {
      */
     public static int port() {
         return getInstance().port();
+    }
+
+    /**
+     * Access for mime types handling.
+     *
+     * @return The mimetype instance
+     */
+    public static MimeType mimeTypes() {
+        return getInstance().mimeTypes;
+    }
+
+    /**
+     * Access to exception mapper.
+     *
+     * @return The ExceptionMapper instance
+     */
+    public static ExceptionMapper exceptionMapper() {
+        return getInstance().exceptionMapper;
+    }
+
+    /**
+     * Access to custom error pages settings.
+     *
+     * @return The CustomErrorPages instance
+     */
+    public static CustomErrorPages customErrorPages() {
+        return getInstance().customErrorPages;
     }
 
     /**
