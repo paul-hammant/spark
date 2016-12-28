@@ -27,10 +27,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import spark.CustomErrorPages;
-import spark.HaltException;
-import spark.RequestResponseFactory;
-import spark.Response;
+import spark.*;
 import spark.embeddedserver.jetty.HttpRequestWrapper;
 import spark.route.HttpMethod;
 import spark.serialization.SerializerChain;
@@ -56,6 +53,7 @@ public class MatcherFilter implements Filter {
     private boolean externalContainer;
     private boolean hasOtherHandlers;
     private final CustomErrorPages customErrorPages;
+    private ExceptionMapper exceptionMapper;
 
     /**
      * Constructor
@@ -70,13 +68,15 @@ public class MatcherFilter implements Filter {
                          StaticFilesConfiguration staticFiles,
                          boolean externalContainer,
                          boolean hasOtherHandlers,
-                         CustomErrorPages customErrorPages) {
+                         CustomErrorPages customErrorPages,
+                         ExceptionMapper exceptionMapper) {
 
         this.routeMatcher = routeMatcher;
         this.staticFiles = staticFiles;
         this.externalContainer = externalContainer;
         this.hasOtherHandlers = hasOtherHandlers;
         this.customErrorPages = customErrorPages;
+        this.exceptionMapper = exceptionMapper;
         this.serializerChain = new SerializerChain();
     }
 
@@ -144,7 +144,8 @@ public class MatcherFilter implements Filter {
                     requestWrapper,
                     responseWrapper,
                     generalException,
-                    customErrorPages);
+                    customErrorPages,
+                    exceptionMapper);
 
         }
 

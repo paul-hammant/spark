@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import spark.CustomErrorPages;
+import spark.ExceptionMapper;
 import spark.embeddedserver.jetty.EmbeddedJettyFactory;
 import spark.route.Routes;
 import spark.staticfiles.StaticFilesConfiguration;
@@ -52,17 +53,20 @@ public class EmbeddedServers {
      * @param staticFilesConfiguration the static files configuration object
      * @param multipleHandlers         true if other handlers exist
      * @param customErrorPages
+     * @param exceptionMapper
      * @return the created EmbeddedServer object
      */
     public static EmbeddedServer create(Object identifier,
                                         Routes routeMatcher,
                                         StaticFilesConfiguration staticFilesConfiguration,
-                                        boolean multipleHandlers, CustomErrorPages customErrorPages) {
+                                        boolean multipleHandlers,
+                                        CustomErrorPages customErrorPages,
+                                        ExceptionMapper exceptionMapper) {
 
         EmbeddedServerFactory factory = factories.get(identifier);
 
         if (factory != null) {
-            return factory.create(routeMatcher, staticFilesConfiguration, multipleHandlers, customErrorPages);
+            return factory.create(routeMatcher, staticFilesConfiguration, multipleHandlers, customErrorPages, exceptionMapper);
         } else {
             throw new RuntimeException("No embedded server matching the identifier");
         }

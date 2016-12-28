@@ -20,22 +20,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ExceptionMapper {
-    /**
-     * Holds a default instance for the exception mapper
-     */
-    private static ExceptionMapper defaultInstance;
-
-    /**
-     * Returns the default instance for the exception mapper
-     *
-     * @return Default instance
-     */
-    public synchronized static ExceptionMapper getInstance() {
-        if (defaultInstance == null) {
-            defaultInstance = new ExceptionMapper();
-        }
-        return defaultInstance;
-    }
 
     /**
      * Holds a map of Exception classes and associated handlers
@@ -45,7 +29,7 @@ public class ExceptionMapper {
     /**
      * Class constructor
      */
-    public ExceptionMapper() {
+    ExceptionMapper() {
         this.exceptionMap = new HashMap<>();
     }
 

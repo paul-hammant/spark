@@ -23,6 +23,7 @@ import spark.CustomErrorPages;
 import spark.ExceptionHandlerImpl;
 import spark.ExceptionMapper;
 import spark.RequestResponseFactory;
+import spark.embeddedserver.jetty.websocket.WebSocketHandlerWrapper;
 
 /**
  * Modifies the HTTP response and body based on the provided exception and request/response wrappers.
@@ -38,9 +39,10 @@ final class GeneralError {
                        RequestWrapper requestWrapper,
                        ResponseWrapper responseWrapper,
                        Exception e,
-                       CustomErrorPages customErrorPages) {
+                       CustomErrorPages customErrorPages,
+                       ExceptionMapper exceptionMapper) {
 
-        ExceptionHandlerImpl handler = ExceptionMapper.getInstance().getHandler(e);
+        ExceptionHandlerImpl handler = exceptionMapper.getHandler(e);
 
         if (handler != null) {
             handler.handle(e, requestWrapper, responseWrapper);

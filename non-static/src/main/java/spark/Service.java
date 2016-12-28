@@ -89,6 +89,7 @@ public class Service extends Routable {
     public final StaticFiles staticFiles;
 
     protected final CustomErrorPages customErrorPages;
+    protected final ExceptionMapper exceptionMapper;
 
     private final StaticFilesConfiguration staticFilesConfiguration;
 
@@ -107,6 +108,7 @@ public class Service extends Routable {
         redirect = Redirect.create(this);
         staticFiles = new StaticFiles();
         customErrorPages = new CustomErrorPages();
+        exceptionMapper = new ExceptionMapper();
 
         if (isRunningFromServlet()) {
             staticFilesConfiguration = StaticFilesConfiguration.servletInstance;
@@ -451,7 +453,9 @@ public class Service extends Routable {
                     server = EmbeddedServers.create(embeddedServerIdentifier,
                                                     routes,
                                                     staticFilesConfiguration,
-                                                    hasMultipleHandlers(), customErrorPages);
+                                                    hasMultipleHandlers(),
+                                                    customErrorPages,
+                                                    exceptionMapper);
 
                     server.configureWebSockets(webSocketHandlers, webSocketIdleTimeoutMillis);
 
@@ -497,7 +501,7 @@ public class Service extends Routable {
             }
         };
 
-        ExceptionMapper.getInstance().map(exceptionClass, wrapper);
+        exceptionMapper.map(exceptionClass, wrapper);
     }
 
     //////////////////////////////////////////////////
