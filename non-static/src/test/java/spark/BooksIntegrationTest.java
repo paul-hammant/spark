@@ -3,6 +3,7 @@ package spark;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static spark.util.SparkTestUtil.sleep;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -67,6 +68,7 @@ public class BooksIntegrationTest {
 
     @Test
     public void canListBooks() {
+        sleep(100);
         bookId = createBookViaPOST().body.trim();
 
         UrlResponse response = doMethod("GET", "/books", null);

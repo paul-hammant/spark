@@ -39,7 +39,6 @@
     <modules>
         <module>non-static</module>
         <module>core</module>
-        <module>tests</module>
     </modules>
 
     <build>
