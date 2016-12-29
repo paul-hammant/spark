@@ -18,10 +18,7 @@ package spark.route;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import spark.Request;
 import spark.Response;
@@ -32,9 +29,8 @@ import static java.util.Collections.singletonList;
 
 public class RouteOverview {
 
-    // Everything below this point is either package private or private
-
-    List<RouteEntry> routes = new ArrayList<>();
+    final ArrayList<RouteEntry> realRoutes = new ArrayList<>();
+    public final List<RouteEntry> routes = Collections.unmodifiableList(realRoutes);
 
     void add(RouteEntry entry, Object wrapped) {
 
@@ -42,7 +38,7 @@ public class RouteOverview {
             entry.target = ((Wrapper) wrapped).delegate();
         }
 
-        routes.add(entry);
+        realRoutes.add(entry);
     }
 
     public String createHtmlOverview(Request request, Response response) {
@@ -59,6 +55,8 @@ public class RouteOverview {
 
         return head + "<body><h1>All mapped routes</h1><table>" + String.join("", tableContent) + "</table><body>";
     }
+
+    // Everything below this point is either package private or private
 
     String createHtmlForRouteTarget(Object routeTarget) {
         String routeStr = routeTarget.toString();

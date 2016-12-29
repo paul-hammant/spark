@@ -130,7 +130,7 @@ public class Routes {
      */
     public void clear() {
         routes.clear();
-        routeOverview.routes.clear();
+        routeOverview.realRoutes.clear();
     }
 
     /**
