@@ -1,11 +1,17 @@
-Experimental Fork of SparkJava to make it non-static
+Experimental fork of Per Wendel's SparkJava to make it non-static
+
+Two jars:
+
+1. The non-static version of Spark - refer to the [child module](non-static) notes
+2. The legacy static version of Spark reusing #1 - refer to the [child module](core) notes
+
+**Evrything Unreleased as yet**
 
  - Paul Hammant, Dec 2016
  
 
-
-![](https://img.shields.io/travis/perwendel/spark.svg) 
-![](https://img.shields.io/github/license/perwendel/spark.svg)
+![](https://img.shields.io/travis/paul-hammant/spark.svg) 
+![](https://img.shields.io/github/license/paul-hammant/spark.svg)
 ![](https://img.shields.io/maven-central/v/com.sparkjava/spark-core.svg)
 
 Spark - a tiny web framework for Java 8
@@ -32,11 +38,13 @@ Getting started
 ---------------
 
 ```java
-import static spark.Spark.*;
+import spark.Service;
 
 public class HelloWorld {
     public static void main(String[] args) {
-        get("/hello", (request, response) -> "Hello World!");
+        new Service() {{
+            get("/hello", (request, response) -> "Hello World!");    
+        }};
     }
 }
 ```
@@ -46,7 +54,7 @@ View at: http://localhost:4567/hello
 
 Check out and try the examples in the source code.
 You can also check out the javadoc. After getting the source from
-[github](https://github.com/perwendel/spark) run: 
+[github](https://github.com/paul-hammant/spark) run: 
 
     mvn javadoc:javadoc
 
@@ -58,7 +66,7 @@ Examples
 Simple example showing some basic functionality
 
 ```java
-import static spark.Spark.*;
+import spark.Service;
 
 /**
  * A simple example just showing some basic functionality
@@ -66,6 +74,8 @@ import static spark.Spark.*;
 public class SimpleExample {
 
     public static void main(String[] args) {
+
+        new Service() {{
 
         //  port(5678); <- Uncomment this if you want spark to listen to port 5678 instead of the default 4567
 
@@ -98,6 +108,8 @@ public class SimpleExample {
         });
 
         get("/", (request, response) -> "root");
+        
+        }};
     }
 }
 
@@ -108,7 +120,7 @@ public class SimpleExample {
 A simple CRUD example showing how to create, get, update and delete book resources
 
 ```java
-import static spark.Spark.*;
+import spark.Service;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -126,6 +138,8 @@ public class Books {
 
     public static void main(String[] args) {
         final Random random = new Random();
+        
+        new Service() {{
 
         // Creates a new book resource, will return the ID to the created resource
         // author and title are sent in the post body as x-www-urlencoded values e.g. author=Foo&title=Bar
@@ -195,6 +209,8 @@ public class Books {
             }
             return ids;
         });
+        
+        }};
     }
 
     public static class Book {
@@ -230,7 +246,7 @@ public class Books {
 Example showing a very simple (and stupid) authentication filter that is executed before all other resources
 
 ```java
-import static spark.Spark.*;
+import spark.Service;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -259,6 +275,8 @@ public class FilterExample {
         usernamePasswords.put("foo", "bar");
         usernamePasswords.put("admin", "admin");
 
+        new Service() {{
+
         before((request, response) -> {
             String user = request.queryParams("user");
             String password = request.queryParams("password");
@@ -279,6 +297,8 @@ public class FilterExample {
 
         afterFinally((request, response) -> response.header("finally", "executed after any route even if exception is throw"));
 
+        }};
+
     }
 }
 ```
@@ -288,8 +308,7 @@ public class FilterExample {
 Example showing how to use attributes
 
 ```java
-import static spark.Spark.after;
-import static spark.Spark.get;
+import spark.Service;
 
 /**
  * Example showing the use of attributes
@@ -297,6 +316,9 @@ import static spark.Spark.get;
 public class FilterExampleAttributes {
 
     public static void main(String[] args) {
+            
+        new Service() {{        
+        
         get("/hi", (request, response) -> {
             request.attribute("foo", "bar");
             return null;
@@ -312,6 +334,8 @@ public class FilterExampleAttributes {
             Object foo = request.attribute("foo");
             response.body(asXml("foo", foo));
         });
+        
+        }};
     }
 
     private static String asXml(String name, Object value) {
@@ -326,17 +350,22 @@ public class FilterExampleAttributes {
 Example showing how to serve static resources
 
 ```java
-import static spark.Spark.*;
+import spark.Service;
 
 public class StaticResources {
 
     public static void main(String[] args) {
+
+        new Service() {{
 
         // Will serve all static file are under "/public" in classpath if the route isn't consumed by others routes.
         // When using Maven, the "/public" folder is assumed to be in "/main/resources"
         staticFileLocation("/public");
 
         get("/hello", (request, response) -> "Hello World!");
+
+        }};
+
     }
 }
 ```
@@ -345,15 +374,20 @@ public class StaticResources {
 Example showing how to define content depending on accept type
 
 ```java
-import static spark.Spark.*;
+import  spark.Service;
 
 public class JsonAcceptTypeExample {
 
     public static void main(String args[]) {
 
+        new Service() {{
+
         //Running curl -i -H "Accept: application/json" http://localhost:4567/hello json message is read.
         //Running curl -i -H "Accept: text/html" http://localhost:4567/hello HTTP 404 error is thrown.
         get("/hello", "application/json", (request, response) -> "{\"message\": \"Hello World\"}");
+
+        }};
+
     }
 } 
 ```
@@ -404,6 +438,8 @@ public class FreeMarkerExample {
 
     public static void main(String args[]) {
 
+        new Service() {{
+
         get("/hello", (request, response) -> {
             Map<String, Object> attributes = new HashMap<>();
             attributes.put("message", "Hello FreeMarker World");
@@ -412,6 +448,9 @@ public class FreeMarkerExample {
             // src/test/resources/spark/examples/templateview/freemarker
             return modelAndView(attributes, "hello.ftl");
         }, new FreeMarkerTemplateEngine());
+
+        }};
+
     }
 }
 ```
@@ -440,9 +479,15 @@ And then the code which return a simple POJO to be transformed to JSON:
 public class TransformerExample {
 
     public static void main(String args[]) {
+        
+        new Service() {{
+        
         get("/hello", "application/json", (request, response) -> {
             return new MyMessage("Hello World");
         }, new JsonTransformer());
+ 
+        }};
+ 
     }
 }
 ```
