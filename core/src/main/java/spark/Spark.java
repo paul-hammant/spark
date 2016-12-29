@@ -16,6 +16,7 @@
  */
 package spark;
 
+import spark.route.RouteOverview;
 import spark.staticfiles.MimeType;
 
 import static spark.Service.ignite;
@@ -989,6 +990,15 @@ public class Spark {
      */
     public static MimeType mimeTypes() {
         return getInstance().mimeTypes;
+    }
+
+    /**
+     * Access for route overview handling.
+     *
+     * @return The RouteOverview instance
+     */
+    public static RouteOverview routeOverview() {
+        return getInstance().routeOverview;
     }
 
     /**

@@ -6,7 +6,7 @@
         <artifactId>oss-parent</artifactId>
         <version>7</version>
     </parent>
-    <groupId>com.sparkjava</groupId>
+    <groupId>com.paulhammant.spark</groupId>
     <artifactId>spark-parent</artifactId>
     <packaging>pom</packaging>
     <version>2.5.5-SNAPSHOT</version>

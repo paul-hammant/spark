@@ -12,7 +12,7 @@ Two jars:
 
 ![](https://img.shields.io/travis/paul-hammant/spark.svg) 
 ![](https://img.shields.io/github/license/paul-hammant/spark.svg)
-![](https://img.shields.io/maven-central/v/com.sparkjava/spark-core.svg)
+![](https://img.shields.io/maven-central/v/com.paulhammant.spark/spark-core.svg)
 
 Spark - a tiny web framework for Java 8
 ==============================================
@@ -24,7 +24,7 @@ NEWS: Spark 2.5.3 is out! (IMPORTANT fix for directory traversal vulnerability w
 
 ```xml
 <dependency>
-    <groupId>com.sparkjava</groupId>
+    <groupId>com.paulhammant.spark</groupId>
     <artifactId>spark-core</artifactId>
     <version>2.5.3</version>
 </dependency>
