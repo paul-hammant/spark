@@ -8,12 +8,15 @@ import java.util.zip.GZIPInputStream;
 
 import spark.utils.IOUtils;
 
+import static spark.util.SparkTestUtil.sleep;
+
 /**
  * Created by Per Wendel on 2015-11-24.
  */
 public class GzipClient {
 
     public static String getAndDecompress(String url) throws Exception {
+        sleep(50);
         InputStream compressed = get(url);
         GZIPInputStream gzipInputStream = new GZIPInputStream(compressed);
         String decompressed = IOUtils.toString(gzipInputStream);
